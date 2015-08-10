@@ -1,0 +1,27 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="android:windowBackground">@color/White</item>
+        <item name="colorPrimary">@color/Red</item>
+        <item name="colorPrimaryDark">@color/RedDark</item>
+
+        <item name="android:textColorPrimary">@color/White</item>
+
+        <item name="android:actionModeBackground">@color/White</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+    <style name="View">
+        <item name="android:layout_margin">4dp</item>
+    </style>
+
+    <style name="View.Small">
+        <item name="android:layout_weight">0.3</item>
+    </style>
+
+    <style name="View.Medium">
+        <item name="android:layout_weight">0.5</item>
+    </style>
+
+</resources>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ModernArtUI</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">More information</string>
+    <string name="btn_ok">Visit MOMA</string>
+    <string name="btn_cancel">Not Now</string>
+    <string name="alert_title">Inspired by the works of artists such as Piet Mondrian and Ben Nicholson</string>
+    <string name="alert_text">Click below to learn more!</string>
+</resources>
