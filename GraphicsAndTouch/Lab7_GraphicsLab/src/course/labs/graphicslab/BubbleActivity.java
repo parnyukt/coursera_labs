@@ -84,15 +84,20 @@ public class BubbleActivity extends Activity {
 				/ mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
 		// TODO - make a new SoundPool, allowing up to 10 streams 
-		mSoundPool = null;
+		mSoundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 
 
 		// TODO - set a SoundPool OnLoadCompletedListener that calls setupGestureDetector()
-
+		mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+			@Override
+			public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+				setupGestureDetector();
+			}
+		});
 
 		
 		// TODO - load the sound from res/raw/bubble_pop.wav
-		mSoundID = 0;
+		mSoundID = mSoundPool.load(getApplicationContext(), R.raw.bubble_pop, 1);
 
 	}
 
@@ -126,11 +131,22 @@ public class BubbleActivity extends Activity {
 				// You can get all Views in mFrame using the
 				// ViewGroup.getChildCount() method
 
+				boolean flungIt = false;
 
-				
-				
-				
-				return false;
+				// iterate over all the bubbles currently being displayed
+				for (int i = 0; i < mFrame.getChildCount(); i++) {
+					BubbleView current = (BubbleView) mFrame.getChildAt(i);
+
+					// if the tap intersects with a bubble, then we should fling it
+					if (current.intersects(event1.getRawX(),event1.getRawY()))
+					{
+						current.deflect(velocityX, velocityY);
+						flungIt = true;
+						break;
+					}
+				}
+
+				return flungIt;
 
 			}
 
@@ -145,19 +161,28 @@ public class BubbleActivity extends Activity {
 				// You can get all Views in mFrame using the
 				// ViewGroup.getChildCount() method
 
+				boolean addNew = true;
 
+				for (int i = 0; i < mFrame.getChildCount(); i++) {
+					BubbleView current = (BubbleView) mFrame.getChildAt(i);
+
+					// if the tap intersects with a bubble, then we should fling it
+					if (current.intersects(event.getRawX(),event.getRawY()))
+					{
+						current.stop(true);
+						addNew = false;
+						break;
+					}
+				}
+
+				if(addNew){
+					BubbleView newBubble = new BubbleView(getApplicationContext(), event.getRawX(), event.getRawY());
+					mFrame.addView(newBubble);
+					newBubble.start();
+				}
 
 				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				return false;
+				return true;
 			}
 		});
 	}
@@ -167,12 +192,8 @@ public class BubbleActivity extends Activity {
 
 		// TODO - Delegate the touch to the gestureDetector
 
-		
-		
-		
-		
-		
-		
+		mGestureDetector.onTouchEvent(event);
+
 		return false;
 	
 	}
@@ -181,10 +202,7 @@ public class BubbleActivity extends Activity {
 	protected void onPause() {
 		
 		// TODO - Release all SoundPool resources
-
-
-
-
+		mSoundPool.release();
 
 		super.onPause();
 	}
