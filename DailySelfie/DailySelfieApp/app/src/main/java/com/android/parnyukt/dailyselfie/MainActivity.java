@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -16,11 +17,17 @@ public class MainActivity extends AppCompatActivity {
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
     private Uri fileUri;
+    private RecyclerView mPhotoRecycleView;
+    private RecyclerView.Adapter mPhotoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mPhotoRecycleView = (RecyclerView)findViewById(R.id.photo_recycler_view);
+        mPhotoAdapter = new PhotoAdapter();
+        mPhotoRecycleView.setAdapter(mPhotoAdapter);
     }
 
     @Override
