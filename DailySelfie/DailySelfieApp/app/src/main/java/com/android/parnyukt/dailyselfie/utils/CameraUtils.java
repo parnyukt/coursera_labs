@@ -1,12 +1,16 @@
 package com.android.parnyukt.dailyselfie.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by tparnyuk on 20.08.15.
@@ -52,6 +56,41 @@ public class CameraUtils {
         }
 
         return mediaFile;
+    }
+
+    public static List<Uri> getInputMediaFiles(String folderName){
+        List<Uri> fileUriList = new ArrayList<>();
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/" + folderName;
+        Log.d("Files", "Path: " + path);
+        File f = new File(path);
+        File file[] = f.listFiles();
+        Log.d("Files", "Size: "+ file.length);
+
+        String fileName;
+        for (int i=0; i < file.length; i++)
+        {
+            fileName = file[i].getName();
+            Log.d("Files", "FileName:" + fileName);
+            fileUriList.add(Uri.fromFile(new File(fileName)));
+        }
+
+        return fileUriList;
+    }
+
+    public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
+        return resizedBitmap;
+
     }
 
 }

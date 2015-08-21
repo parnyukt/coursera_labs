@@ -4,12 +4,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.android.parnyukt.dailyselfie.model.Selfie;
+
+import java.util.List;
 
 /**
  * Created by tparnyuk on 20.08.15.
  */
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> {
+
+    private List<Selfie> records;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -17,12 +24,20 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView mTextView;
+        public ImageView mPhotoImageView;
+        public TextView mPhotoTextView;
+
 
         public ViewHolder(View view) {
             super(view);
-            mTextView = (TextView) view.findViewById(R.id.photo_name);
+            mPhotoImageView = (ImageView) view.findViewById(R.id.photo_image);
+            mPhotoTextView = (TextView) view.findViewById(R.id.photo_name);
         }
+    }
+
+    // Provide a suitable constructor (depends on the kind of dataset)
+    public PhotoAdapter(List<Selfie> dataset) {
+        records = dataset;
     }
 
     @Override
@@ -37,12 +52,17 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        // - get element from your dataset at this position
+        // - replace the contents of the view with that element
+        Selfie selfie = records.get(position);
 
+//        viewHolder.mPhotoImageView.setImageURI();
+        viewHolder.mPhotoTextView.setText(selfie.getSelfieName());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return records.size();
     }
 }
