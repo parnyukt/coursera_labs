@@ -1,6 +1,7 @@
 package com.android.parnyukt.dailyselfie;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,12 +13,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.parnyukt.dailyselfie.model.Selfie;
 import com.android.parnyukt.dailyselfie.utils.CameraUtils;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,15 +28,17 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
+    private Context mContext;
     private Uri fileUri;
     private RecyclerView mPhotoRecycleView;
-    private RecyclerView.Adapter mPhotoAdapter;
+    private PhotoAdapter mPhotoAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mContext = this;
 
         mPhotoRecycleView = (RecyclerView)findViewById(R.id.photo_recycler_view);
 
@@ -45,14 +50,25 @@ public class MainActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mPhotoRecycleView.setLayoutManager(mLayoutManager);
 
-        //todo: get images from storage
+        //get images from storage
         List<File> fileList = CameraUtils.getInputMediaFiles(getString(R.string.app_name));
         List<Selfie> selfies = getSelfieImages(fileList);
 
-
-
         mPhotoAdapter = new PhotoAdapter(selfies);
         mPhotoRecycleView.setAdapter(mPhotoAdapter);
+
+        mPhotoRecycleView.addOnItemTouchListener(
+                new RecyclerItemClickListener(mContext, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Selfie selfie= mPhotoAdapter.getItem(position);
+
+                        Intent intent = new Intent(mContext, ViewPhotoActivity.class);
+                        intent.putExtra("PATH", selfie.getSelfiePath());
+                        startActivity(intent);
+                    }
+                })
+        );
     }
 
     @Override
@@ -113,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         return selfieList;
     }
 
-    private Bitmap getSelfieThumbnail(File file, int widthId, int heightId){
+    public Bitmap getSelfieThumbnail(File file, int widthId, int heightId){
         Uri fileUri = Uri.fromFile(file);
         getContentResolver().notifyChange(fileUri, null);
 
@@ -121,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         Bitmap bitmap;
         try {
             bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, fileUri);
-            bitmap = CameraUtils.getResizedBitmap(bitmap, getResources().getDimensionPixelOffset(heightId), getResources().getDimensionPixelOffset(widthId));
+            bitmap = CameraUtils.getResizedBitmap(bitmap, bitmap.getHeight() / 10, bitmap.getWidth() / 10);
             return bitmap;
         } catch (Exception e) {
             Log.e("Camera", e.toString());

@@ -3,19 +3,29 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/photo_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"
-        android:layout_margin="10dp"
-        android:layout_centerVertical="true"/>
+
+    <RelativeLayout
+        android:id="@+id/photo_view"
+        android:layout_width="@dimen/photo_height"
+        android:layout_height="@dimen/photo_height"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:id="@+id/photo_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_launcher"
+            android:layout_margin="10dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"/>
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/photo_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/photo_image"
+        android:layout_toRightOf="@+id/photo_view"
         android:layout_centerVertical="true"
         android:text="[text]"/>
 

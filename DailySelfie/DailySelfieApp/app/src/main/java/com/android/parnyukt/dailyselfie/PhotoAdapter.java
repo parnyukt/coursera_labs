@@ -1,6 +1,7 @@
 package com.android.parnyukt.dailyselfie;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,5 +65,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return records.size();
+    }
+
+    public Selfie getItem(int position){
+        return records.get(position);
     }
 }

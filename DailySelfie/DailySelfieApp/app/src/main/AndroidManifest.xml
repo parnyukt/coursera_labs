@@ -20,6 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ViewPhotoActivity"
+            android:label="@string/title_activity_view_photo" >
+        </activity>
     </application>
 
 </manifest>
