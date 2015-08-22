@@ -1,11 +1,14 @@
 package com.android.parnyukt.dailyselfie;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,7 +23,6 @@ import com.android.parnyukt.dailyselfie.model.Selfie;
 import com.android.parnyukt.dailyselfie.utils.CameraUtils;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,11 +30,17 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
+    private static final long TWO_MINUTES = 120 * 1000L;
+
     private Context mContext;
     private Uri fileUri;
     private RecyclerView mPhotoRecycleView;
     private PhotoAdapter mPhotoAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    private AlarmManager mAlarmManager;
+    private PendingIntent mSelfiePendingIntent;
+    private Intent mSelfieNotificationIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +77,24 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
         );
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Cancel the alarm when we are in the app.
+        SelfieAlarmBroadcastReceiver selfieAlarm = new SelfieAlarmBroadcastReceiver();
+        selfieAlarm.cancelAlarm(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // setup repeating alarm while the app is stopped.
+        SelfieAlarmBroadcastReceiver selfieAlarm = new SelfieAlarmBroadcastReceiver();
+        selfieAlarm.setupAlarm(this);
     }
 
     @Override
@@ -119,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
-    private List<Selfie> getSelfieImages(List<File> fileList){
+    private List<Selfie> getSelfieImages(List<File> fileList) {
         List<Selfie> selfieList = new ArrayList<>();
         Bitmap bitmap;
         for (File file : fileList){
