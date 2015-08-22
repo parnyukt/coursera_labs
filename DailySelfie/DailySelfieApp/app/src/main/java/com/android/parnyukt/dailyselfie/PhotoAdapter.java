@@ -57,7 +57,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
         // - replace the contents of the view with that element
         Selfie selfie = records.get(position);
 
-//        viewHolder.mPhotoImageView.setImageURI();
+        viewHolder.mPhotoImageView.setImageBitmap(selfie.getSelfieThumb());
         viewHolder.mPhotoTextView.setText(selfie.getSelfieName());
     }
 

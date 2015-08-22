@@ -58,8 +58,8 @@ public class CameraUtils {
         return mediaFile;
     }
 
-    public static List<Uri> getInputMediaFiles(String folderName){
-        List<Uri> fileUriList = new ArrayList<>();
+    public static List<File> getInputMediaFiles(String folderName){
+        List<File> fileList = new ArrayList<>();
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/" + folderName;
         Log.d("Files", "Path: " + path);
         File f = new File(path);
@@ -69,12 +69,13 @@ public class CameraUtils {
         String fileName;
         for (int i=0; i < file.length; i++)
         {
-            fileName = file[i].getName();
-            Log.d("Files", "FileName:" + fileName);
-            fileUriList.add(Uri.fromFile(new File(fileName)));
+//            fileName = file[i].getName();
+//            Log.d("Files", "FileName:" + fileName);
+            fileList.add(new File(file[i].getAbsolutePath()));
+//            fileUriList.add(Uri.fromFile(new File(fileName)));
         }
 
-        return fileUriList;
+        return fileList;
     }
 
     public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {

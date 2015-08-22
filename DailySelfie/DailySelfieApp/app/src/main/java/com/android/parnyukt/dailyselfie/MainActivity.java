@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.android.parnyukt.dailyselfie.model.Selfie;
 import com.android.parnyukt.dailyselfie.utils.CameraUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
         mPhotoRecycleView.setLayoutManager(mLayoutManager);
 
         //todo: get images from storage
-        List<Uri> fileUriList = CameraUtils.getInputMediaFiles(getString(R.string.app_name));
-        List<Selfie> selfies = getSelfieImages(fileUriList);
+        List<File> fileList = CameraUtils.getInputMediaFiles(getString(R.string.app_name));
+        List<Selfie> selfies = getSelfieImages(fileList);
 
 
 
@@ -102,24 +103,26 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
 
-    private List<Selfie> getSelfieImages(List<Uri> fileUriList){
+    private List<Selfie> getSelfieImages(List<File> fileList){
         List<Selfie> selfieList = new ArrayList<>();
-        for (Uri fileUri : fileUriList){
-            selfieList.add(getSelfieByUri(fileUri, R.dimen.photo_width, R.dimen.photo_height));
+        Bitmap bitmap;
+        for (File file : fileList){
+            bitmap = getSelfieThumbnail(file, R.dimen.photo_width, R.dimen.photo_height);
+            selfieList.add(new Selfie(file.getName(), file.getAbsolutePath(), bitmap));
         }
         return selfieList;
     }
 
-    private Selfie getSelfieByUri(Uri fileUri, int widthId, int heightId){
+    private Bitmap getSelfieThumbnail(File file, int widthId, int heightId){
+        Uri fileUri = Uri.fromFile(file);
         getContentResolver().notifyChange(fileUri, null);
 
         ContentResolver cr = getContentResolver();
         Bitmap bitmap;
         try {
             bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, fileUri);
-            bitmap = CameraUtils.getResizedBitmap(bitmap, getResources().getDimensionPixelOffset(widthId), getResources().getDimensionPixelOffset(heightId));
-            return new Selfie("", "", bitmap);
-//                iv_foto.setImageBitmap(bitmap);
+            bitmap = CameraUtils.getResizedBitmap(bitmap, getResources().getDimensionPixelOffset(heightId), getResources().getDimensionPixelOffset(widthId));
+            return bitmap;
         } catch (Exception e) {
             Log.e("Camera", e.toString());
         }
