@@ -59,20 +59,24 @@ public class CameraUtils {
     }
 
     public static List<File> getInputMediaFiles(String folderName){
-        List<File> fileList = new ArrayList<>();
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/" + folderName;
         Log.d("Files", "Path: " + path);
-        File f = new File(path);
-        File file[] = f.listFiles();
+        File mediaStorageDir = new File(path);
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                Log.d("MyCameraApp", "failed to create directory");
+                return new ArrayList<>();
+            }
+        }
+
+        List<File> fileList = new ArrayList<>();
+        File file[] = mediaStorageDir.listFiles();
         Log.d("Files", "Size: "+ file.length);
 
-        String fileName;
         for (int i=0; i < file.length; i++)
         {
-//            fileName = file[i].getName();
-//            Log.d("Files", "FileName:" + fileName);
             fileList.add(new File(file[i].getAbsolutePath()));
-//            fileUriList.add(Uri.fromFile(new File(fileName)));
         }
 
         return fileList;
