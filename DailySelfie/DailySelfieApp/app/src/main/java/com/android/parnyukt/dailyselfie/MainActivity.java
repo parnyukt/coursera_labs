@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         //get images from storage
-        List<File> fileList = CameraUtils.getInputMediaFiles(getString(R.string.app_name));
+        List<File> fileList = CameraUtils.getInputMediaFiles(getString(R.string.folder_name));
         List<Selfie> selfies = getSelfieImages(fileList);
         mPhotoAdapter.setData(selfies);
         mPhotoAdapter.notifyDataSetChanged();
@@ -136,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        fileUri = CameraUtils.getOutputMediaFileUri(CameraUtils.MEDIA_TYPE_IMAGE, getString(R.string.app_name)); // create a file to save the image
+        // create a file to save the image
+        fileUri = CameraUtils.getOutputMediaFileUri(CameraUtils.MEDIA_TYPE_IMAGE, getString(R.string.folder_name));
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
 
         // start the image capture Intent

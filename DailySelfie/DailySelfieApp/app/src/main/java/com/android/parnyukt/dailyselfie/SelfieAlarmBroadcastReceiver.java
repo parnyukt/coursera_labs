@@ -8,17 +8,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
-import android.util.Log;
-
-import java.text.DateFormat;
-import java.util.Date;
-
 /**
  * Created by tatyana on 22.08.15.
  */
 public class SelfieAlarmBroadcastReceiver extends BroadcastReceiver {
 
     private static final int MY_NOTIFICATION_ID = 1;
+    private static final int TWO_MINUTES = 30 * 1000;
 
     public void setupAlarm(Context context) {
 
@@ -26,8 +22,8 @@ public class SelfieAlarmBroadcastReceiver extends BroadcastReceiver {
         PendingIntent alarmIntent = getAlarmIntent(context);
 
         alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() + (60 * 1000),
-                60 * 1000,
+                SystemClock.elapsedRealtime() + (TWO_MINUTES),
+                TWO_MINUTES,
                 alarmIntent);
     }
 
@@ -62,10 +58,10 @@ public class SelfieAlarmBroadcastReceiver extends BroadcastReceiver {
         Notification.Builder notificationBuilder = new Notification.Builder(
                 context)
                 .setTicker("Time for another selfie")
-                .setSmallIcon(android.R.drawable.stat_sys_warning)
+                .setSmallIcon(R.drawable.ic_camera)
                 .setAutoCancel(true)
                 .setContentTitle("Daily Selfie")
-                .setContentText("Time for another selfie 2")
+                .setContentText("Time for another selfie")
                 .setContentIntent(mContentIntent)
                 .setVibrate(mVibratePattern);
 

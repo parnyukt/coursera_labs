@@ -1,9 +1,7 @@
 <resources>
-    <string name="app_name">DailySelfie</string>
-
+    <string name="app_name">Daily Selfie</string>
+    <string name="folder_name">DailySelfie</string>
     <string name="action_camera">Camera</string>
-    <string name="title_activity_view_photo">ViewPhotoActivity</string>
-
-    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_view_photo">Daily Selfie</string>
     <string name="action_delete">Delete</string>
 </resources>

@@ -1,8 +1,11 @@
 package com.android.parnyukt.dailyselfie;
 
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,13 +14,13 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.parnyukt.dailyselfie.model.Selfie;
-import com.android.parnyukt.dailyselfie.utils.CameraUtils;
+import com.android.parnyukt.dailyselfie.utils.Dialogs;
 
 import java.io.File;
 
 public class ViewPhotoActivity extends AppCompatActivity {
 
+    Context mcContext;
     ImageView mPhotoImageView;
     String filePath;
 
@@ -25,6 +28,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_photo);
+        mcContext = this;
 
         mPhotoImageView = (ImageView) findViewById(R.id.photo_image);
 
@@ -74,12 +78,26 @@ public class ViewPhotoActivity extends AppCompatActivity {
     }
 
     public void deletePhoto(){
-        File file = new File(filePath);
-        boolean deleted = file.delete();
-        if (deleted){
-            Toast.makeText(this, "Photo is deleted.", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Can't delete this photo.", Toast.LENGTH_LONG).show();
-        }
+        Dialogs.confirmDialogShow(mcContext, "Delete photo",
+                "Are you sure you want to delete this photo?",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int buttonId) {
+                        File file = new File(filePath);
+                        boolean deleted = file.delete();
+                        if (deleted){
+                            Toast.makeText(mcContext, "Photo is deleted.", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(mcContext, "Can't delete this photo.", Toast.LENGTH_LONG).show();
+                        }
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                finish();
+                            }
+                        }, 3000);
+                    }
+                }
+        );
     }
 }
