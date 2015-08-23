@@ -38,10 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private PhotoAdapter mPhotoAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private AlarmManager mAlarmManager;
-    private PendingIntent mSelfiePendingIntent;
-    private Intent mSelfieNotificationIntent;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,11 +54,7 @@ public class MainActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mPhotoRecycleView.setLayoutManager(mLayoutManager);
 
-        //get images from storage
-        List<File> fileList = CameraUtils.getInputMediaFiles(getString(R.string.app_name));
-        List<Selfie> selfies = getSelfieImages(fileList);
-
-        mPhotoAdapter = new PhotoAdapter(selfies);
+        mPhotoAdapter = new PhotoAdapter(new ArrayList<Selfie>());
         mPhotoRecycleView.setAdapter(mPhotoAdapter);
 
         mPhotoRecycleView.addOnItemTouchListener(
@@ -82,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        //get images from storage
+        List<File> fileList = CameraUtils.getInputMediaFiles(getString(R.string.app_name));
+        List<Selfie> selfies = getSelfieImages(fileList);
+        mPhotoAdapter.setData(selfies);
+        mPhotoAdapter.notifyDataSetChanged();
 
         // Cancel the alarm when we are in the app.
         SelfieAlarmBroadcastReceiver selfieAlarm = new SelfieAlarmBroadcastReceiver();

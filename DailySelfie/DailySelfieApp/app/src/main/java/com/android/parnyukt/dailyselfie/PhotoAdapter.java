@@ -70,4 +70,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     public Selfie getItem(int position){
         return records.get(position);
     }
+
+    public void setData(List<Selfie> data){
+        records.clear();
+        records.addAll(data);
+    }
 }
